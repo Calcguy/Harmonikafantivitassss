@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harmonikafantivitas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #dec6ae;
+      color: #333;
+    }
+    header {
+      background-color: #8e4233;
+      color: #edca3d;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #444;
+      padding: 0.5rem;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-size: 1.1rem;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      padding: 2rem;
+      text-align: center;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      margin-top: 1rem;
+    }
+    .button {
+      display: inline-block;
+      margin: 1rem 0;
+      padding: 0.7rem 1.5rem;
+      background-color: #e74c3c;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .button:hover {
+      background-color: #c0392b;
+    }
+    .product {
+      margin: 2rem auto;
+      display: inline-block;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1rem;
+      background-color: #fff;
+      max-width: 300px;
+    }
+    footer {
+      background-color: #222;
+      color: #fff;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    /* Flappy Spil */
+    .game-container {
+      margin: 2rem auto;
+      width: 100%;
+      max-width: 600px;
+      border: 2px solid #444;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      background: url('Skærmbillede 2024-12-15 201716.png') no-repeat center center;
+      background-size: cover;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>Harmonikafantivitas</h1>
+    <p>Velkommen til det officielle website for Harmonikafantivitas</p>
+  </header>
+  <!-- Navigation -->
+  <nav>
+    <a href="#forside">Forside</a>
+    <a href="#booking">Booking</a>
+    <a href="#merch">Merch</a>
+    <a href="#spil">Spil</a>
+  </nav>
+  <!-- Forside -->
+  <section id="forside">
+    <h2>Om os</h2>
+    <p>
+      Harmonikafantivitas er bandet, der bringer glæde og fest til enhver lejlighed. Vi leverer musik, der får
+      folk op af stolene – jo flere bajer, jo bajre!
+    </p>
+    <img src="Skærmbillede%202024-12-15%20201716.png"" alt="Bandbillede af Harmonikafantivitas">
+  </section>
+  <!-- Booking -->
+  <section id="booking">
+    <h2>Booking</h2>
+    <p>Vælg din bookingmulighed:</p>
+    <div class="product">
+      <h3>Booking med bajer</h3>
+      <p>Pris: 150 kr</p>
+      <a href="tel:42378318" class="button">Book nu</a>
+    </div>
+    <div class="product">
+      <h3>Booking uden bajer</h3>
+      <p>Pris: 1499 kr</p>
+      <a href="tel:42378318" class="button">Book nu</a>
+    </div>
+    <p>Ring eller MobilePay til <strong>42378318</strong> for at bekræfte din booking.</p>
+  </section>
+  <!-- Merch -->
+  <section id="merch">
+    <h2>Merchandise</h2>
+    <div class="product">
+      <h3>I ❤️ Harmonikafantivitas T-shirt</h3>
+      <img src="Skærmbillede%202024-12-15%20204525.png" alt="Harmonikafantivitas T-shirt">
+      <p>Pris: 110 kr</p>
+      <p>Betal med MobilePay til <strong>42378318</strong></p>
+    </div>
+  </section>
+  <!-- Spil -->
+  <section id="spil">
+    <h2>Flappy Harmonikafantivitas</h2>
+    <p>!!Prøv for satan da vores Flappy Fantivitas, Tryk space på pc, find selv ud af det på din telefon, det har jeg sku lige glemt...!!!</p>
+    <div class="game-container">
+      <canvas id="flappyCanvas" width="600" height="400"></canvas>
+    </div>
+  </section>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Harmonikafantivitas. Alle rettigheder forbeholdes.</p>
+  </footer>
+
+  <!-- Flappy Bird Script -->
+  <script>
+    const canvas = document.getElementById("flappyCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Assets
+    const birdImage = new Image();
+    birdImage.src = 'Skærmbillede 2024-12-16 182606.png'; // Fuglen
+    const pipeImage = new Image();
+    pipeImage.src = 'Skærmbillede 2024-12-16 182711.png'; // Forhindringer
+
+    // Bird position and physics
+    let birdY = canvas.height / 2;
+    let birdX = 100;
+    let gravity = 0.5;
+    let velocity = 0;
+    let jump = -8;
+
+    // Pipes
+    let pipes = [];
+    let pipeGap = 150;
+    let pipeWidth = 40;
+    let frame = 0;
+
+    // Spawn pipes at random positions
+    function spawnPipe() {
+        let topHeight = Math.random() * (canvas.height - pipeGap - 50) + 20;
+        pipes.push({
+            x: canvas.width,
+            top: topHeight,
+            bottom: topHeight + pipeGap
+        });
+    }
+
+    // Draw the bird
+    function drawBird() {
+        ctx.drawImage(birdImage, birdX, birdY, 60, 60);
+    }
+
+    // Draw pipes
+    function drawPipes() {
+        pipes.forEach(pipe => {
+            ctx.drawImage(pipeImage, pipe.x, 0, pipeWidth, pipe.top);
+            ctx.drawImage(pipeImage, pipe.x, pipe.bottom, pipeWidth, canvas.height - pipe.bottom);
+        });
+    }
+
+    // Update pipe positions
+    function updatePipes() {
+        pipes.forEach(pipe => {
+            pipe.x -= 3; // Pipes move left
+        });
+
+        // Remove pipes that move off screen
+        if (pipes[0]?.x + pipeWidth < 0) {
+            pipes.shift();
+        }
+
+        // Spawn new pipes at intervals
+        if (frame % 100 === 0) {
+            spawnPipe();
+        }
+    }
+
+    // Check for collisions
+    function collision() {
+        if (birdY <= 0 || birdY + 40 >= canvas.height) return true; // Bird hits ground or top
+
+        return pipes.some(pipe =>
+            birdX < pipe.x + pipeWidth &&
+            birdX + 40 > pipe.x &&
+            (birdY < pipe.top || birdY + 40 > pipe.bottom) // Bird hits pipe
+        );
+    }
+
+    // Reset the game
+    function resetGame() {
+        pipes = [];
+        birdY = canvas.height / 2;
+        velocity = 0;
+        frame = 0;
+    }
+
+    // Game loop
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        drawBird();
+        drawPipes();
+        updatePipes();
+
+        // Apply gravity
+        velocity += gravity;
+        birdY += velocity;
+
+        // Check for collisions
+        if (collision()) {
+            resetGame();
+        }
+
+        // Increment frame count
+        frame++;
+        requestAnimationFrame(gameLoop);
+    }
+
+    // Control bird jump
+    window.addEventListener("keydown", () => {
+        velocity = jump; // Apply upward force
+    });
+
+    // Start game after bird image loads
+    birdImage.onload = () => gameLoop();
+  </script>
+</body>
+</html>

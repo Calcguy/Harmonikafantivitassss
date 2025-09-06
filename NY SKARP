@@ -1,0 +1,77 @@
+// App.jsx
+import { useState } from "react";
+
+export default function App() {
+  const [path, setPath] = useState(["root"]);
+
+  const current = path[path.length - 1];
+
+  const openFolder = (folder) => setPath([...path, folder]);
+  const goBack = () => setPath(path.slice(0, -1));
+
+  return (
+    <div
+      className="w-screen h-screen bg-cover flex flex-col items-center justify-center"
+      style={{ backgroundImage: "url('/bliss.jpg')" }}
+    >
+      {/* Window simulation */}
+      <div className="bg-gray-200 border-2 border-gray-600 shadow-xl w-96 h-96 p-4">
+        {/* Top bar */}
+        <div className="bg-blue-600 text-white p-2 flex justify-between">
+          <span>{current === "root" ? "My Computer" : current}</span>
+          {path.length > 1 && (
+            <button onClick={goBack} className="bg-blue-400 px-2 rounded">
+              ← Back
+            </button>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="p-4 flex flex-col gap-4">
+          {current === "root" && (
+            <div className="grid grid-cols-3 gap-4">
+              <Folder name="Abel" onClick={openFolder} />
+              <Folder name="Bossa" onClick={openFolder} />
+              <Folder name="Carl" onClick={openFolder} />
+            </div>
+          )}
+
+          {["Abel", "Bossa", "Carl"].includes(current) && (
+            <div className="grid grid-cols-3 gap-4">
+              <Folder name="Jeans" onClick={openFolder} />
+              <Folder name="Tshirt" onClick={openFolder} />
+              <Folder name="Hoodie" onClick={openFolder} />
+            </div>
+          )}
+
+          {["Jeans", "Tshirt", "Hoodie"].includes(current) && (
+            <div className="flex flex-col items-center gap-2">
+              <input
+                type="text"
+                placeholder={`Skriv noget om ${current}`}
+                className="border p-2 w-full"
+              />
+              <img
+                src={`/${current.toLowerCase()}.png`}
+                alt={current}
+                className="w-32 h-32 object-contain"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Folder({ name, onClick }) {
+  return (
+    <button
+      onClick={() => onClick(name)}
+      className="flex flex-col items-center gap-1"
+    >
+      <img src="/folder.png" alt="folder" className="w-12 h-12" />
+      <span>{name}</span>
+    </button>
+  );
+}
